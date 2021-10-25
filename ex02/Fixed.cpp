@@ -23,14 +23,14 @@ Fixed::Fixed(const float value) {
 	fractional = abs - static_cast<int>(abs);
 
 	while (fractional - (static_cast<int>(fractional)) > 0.0) {
-		if ((static_cast<int>(fractional * 10) & (~fractMask)) != 0) {
+		if (((static_cast<int>(fractional * 10) / 3) & (~fractMask)) != 0) {
 			break;
 		}
 
 		fractional *= 10;
 	}
 
-	mValue |= static_cast<int>(roundf(fractional)) & fractMask;
+	mValue |= (static_cast<int>(roundf(fractional)) / 3) & fractMask;
 }
 
 Fixed::Fixed(const Fixed &cpy) {
@@ -60,7 +60,7 @@ float Fixed::toFloat() const {
 
 	integralPart = mValue >> sFractionalBits;
 
-	fractPart = mValue & fractMask;
+	fractPart = (mValue & fractMask) * 3;
 	while ((fractPart / fractDivider) > 1.0f) {
 		fractDivider *= 10;
 	}
