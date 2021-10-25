@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+ex0*/a.out
+
+*.ign
