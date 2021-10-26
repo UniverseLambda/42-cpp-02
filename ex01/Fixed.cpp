@@ -13,24 +13,11 @@ Fixed::Fixed(const int value) {
 }
 
 Fixed::Fixed(const float value) {
-	float fractional;
-	float abs = (value > 0.0) ? value : -value;
-	int fractMask = getFractionalMask();
+	int scalingFactor = 1 << sFractionalBits;
 
 	std::cout << "Float constructor called" << std::endl;
 
-	mValue = static_cast<int>(value) << sFractionalBits;
-	fractional = abs - static_cast<int>(abs);
-
-	while (fractional - (static_cast<int>(fractional)) > 0.0) {
-		if (((static_cast<int>(fractional * 10) / 3) & (~fractMask)) != 0) {
-			break;
-		}
-
-		fractional *= 10;
-	}
-
-	mValue |= (static_cast<int>(roundf(fractional)) / 3) & fractMask;
+	mValue = static_cast<int>(roundf(value * scalingFactor));
 }
 
 Fixed::Fixed(const Fixed &cpy) {
@@ -48,24 +35,22 @@ Fixed &Fixed::operator=(const Fixed &rhs) {
 	return *this;
 }
 
+Fixed::operator float() const {
+	return toFloat();
+}
+
+Fixed::operator int() const {
+	return toInt();
+}
+
 int Fixed::toInt() const {
 	return mValue >> sFractionalBits;
 }
 
 float Fixed::toFloat() const {
-	int integralPart;
-	int fractPart;
-	float fractDivider = 1;
-	int fractMask = getFractionalMask();
+	int scalingFactor = 1 << sFractionalBits;
 
-	integralPart = mValue >> sFractionalBits;
-
-	fractPart = (mValue & fractMask) * 3;
-	while ((fractPart / fractDivider) > 1.0f) {
-		fractDivider *= 10;
-	}
-
-	return static_cast<float>(integralPart) + (static_cast<float>(fractPart) / fractDivider);
+	return static_cast<float>(mValue) / scalingFactor;
 }
 
 int Fixed::getRawBits() const {
@@ -74,15 +59,6 @@ int Fixed::getRawBits() const {
 
 void Fixed::setRawBits(int const raw) {
 	mValue = raw;
-}
-
-int Fixed::getFractionalMask() {
-	int fractMask = 0x00;
-
-	for (int i = 0; i < sFractionalBits; ++i) {
-		fractMask |= 0x01 << i;
-	}
-	return fractMask;
 }
 
 std::ostream &operator<<(std::ostream &lhs, const Fixed &rhs) {

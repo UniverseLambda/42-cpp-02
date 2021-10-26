@@ -16,14 +16,14 @@ public:
 
 	Fixed &operator=(const Fixed &rhs);
 
+	operator float() const;
+	operator int() const;
+
 	int toInt() const;
 	float toFloat() const;
 
 	int getRawBits() const;
 	void setRawBits(int const raw);
-
-private:
-	static int getFractionalMask();
 };
 
 std::ostream &operator<<(std::ostream &lhs, const Fixed &rhs);
