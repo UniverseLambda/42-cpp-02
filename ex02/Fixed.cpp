@@ -78,33 +78,29 @@ Fixed Fixed::operator/(const Fixed &rhs) const {
 }
 
 Fixed &Fixed::operator++() {
-	Fixed tmp;
-
-	tmp.setRawBits(0x01);
-
-	setRawBits(getRawBits() + tmp.getRawBits());
+	setRawBits(getRawBits() + 0x01);
 	return *this;
 }
 
 Fixed &Fixed::operator--() {
-	Fixed tmp;
-
-	tmp.setRawBits(0x01);
-
-	setRawBits(getRawBits() - tmp.getRawBits());
+	setRawBits(getRawBits() - 0x01);
 	return *this;
 }
 
-Fixed Fixed::operator++(int) const {
+Fixed Fixed::operator++(int) {
 	Fixed result(*this);
 
-	return ++result;
+	++(*this);
+
+	return result;
 }
 
-Fixed Fixed::operator--(int) const {
+Fixed Fixed::operator--(int) {
 	Fixed result(*this);
 
-	return --result;
+	--(*this);
+
+	return result;
 }
 
 Fixed::operator float() const {

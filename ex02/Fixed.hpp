@@ -31,8 +31,8 @@ public:
 	Fixed &operator++();
 	Fixed &operator--();
 
-	Fixed operator++(int) const;
-	Fixed operator--(int) const;
+	Fixed operator++(int);
+	Fixed operator--(int);
 
 	operator float() const;
 	operator int() const;
